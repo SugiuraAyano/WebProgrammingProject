@@ -25,22 +25,35 @@ $UserGroupID = $rs[0]['groupid'];
     // $GroupNames[$ID] = $item['groupname'];
 // } 
 
-if (isset($action) && $action=='recover' && isset($id)) {
+if (isset($action) && $action=='recover' && isset($cid)) {
     // Recover this item
     // Check whether this user have the right to modify this contact info
-    $sqlcmd = "SELECT * FROM item WHERE id='$id'";
+    $sqlcmd = "SELECT * FROM namelist WHERE cid='$cid' AND valid='N'";
     $rs = querydb($sqlcmd, $db_conn);
-//        
+    if (count($rs) > 0) {
+//        $GID = $rs[0]['groupid'];
+//        if (isset($GroupNames[$GID])) {     // Yes, the  user has the right. Perform update
+            /* $sqlcmd = "UPDATE namelist SET valid='Y' WHERE cid='$cid'"; */
+			$sqlcmd = "UPDATE namelist SET valid='Y'";
+            $result = updatedb($sqlcmd, $db_conn);
+//        }
     }
 }
-if (isset($action) && $action=='delete' && isset($id)) {
+if (isset($action) && $action=='delete' && isset($cid)) {
     // Invalid this item
     // Check whether this user have the right to modify this contact info
-    $sqlcmd = "SELECT * FROM item WHERE id='$id' AND valid='Y'";
+    $sqlcmd = "SELECT * FROM namelist WHERE cid='$cid' AND valid='Y'";
     $rs = querydb($sqlcmd, $db_conn);
- 
+    if (count($rs) > 0) {
+//        $GID = $rs[0]['groupid'];
+//        if (isset($GroupNames[$GID])) {     // Yes, the user has the right. Perform update
+            /* $sqlcmd = "UPDATE namelist SET valid='N' WHERE cid='$cid'"; */
+			$sqlcmd = "UPDATE namelist SET valid='N'WHERE cid='$cid'";
+            $result = updatedb($sqlcmd, $db_conn);
+//        }
+    }
 }
-$ItemPerPage = 3;
+$ItemPerPage = 5;
 $PageTitle = '單位人員資訊系統示範';
 require_once("../include/header.php");
 /*
@@ -49,7 +62,7 @@ foreach ($GroupNames as $ID => $GroupName) $GroupIDs .= "','" . $ID;
 $GroupIDs = "(" . substr($GroupIDs,2) . "')";
 $sqlcmd = "SELECT count(*) AS reccount FROM namelist WHERE groupid IN $GroupIDs ";
 */
-$sqlcmd = "SELECT count(*) AS reccount FROM item ";
+$sqlcmd = "SELECT count(*) AS reccount FROM namelist ";
 $rs = querydb($sqlcmd, $db_conn);
 $RecCount = $rs[0]['reccount'];
 $TotalPage = (int) ceil($RecCount/$ItemPerPage);
@@ -61,7 +74,7 @@ if ($Page > $TotalPage) $Page = $TotalPage;
 if(!isset($Page) || $Page<1) $Page = 1;
 $_SESSION['CurPage'] = $Page;
 $StartRec = ($Page-1) * $ItemPerPage;
-$sqlcmd = "SELECT * FROM item "
+$sqlcmd = "SELECT * FROM namelist "
     . "LIMIT $StartRec,$ItemPerPage";
 $Contacts = querydb($sqlcmd, $db_conn);
 ?>
@@ -104,29 +117,34 @@ for ($p=1; $p<=$TotalPage; $p++) {
 </table>
 <table class="mistab" width="90%" align="center">
 <tr>
-  <th width="15%">處理</th>
-  <th width="10%">序號</a></th>
-  <th width="15%">商品名</th>
-  <th width="20%">價錢</th>
-  <th width="10%">數量</a></th>
-  <th width="40%">圖片</a></th>
-  <th width="10%">簡介</a></th>
+  <th width="10%">處理</th>
+  <th width="5%" >編號</th>
+  <th width="10%">姓名</th>
+  <th width="15%">圖片</th>
+  <th width="%">電話</th>
+  <th>地址</th>
+  <th width="5%">性別</th>
+  <th width="5%">信箱</th>
+
 </tr>
 <?php
 foreach ($Contacts AS $item) {
-  $cid = $item['id'];
+  $cid = $item['cid'];
   $Name = $item['name'];
-  $Price = $item['price'];
-  $Amount = $item['amount'];
-  $ITimage = $item['itemimage'];
+  $Phone = $item['phone'];
+  $Sellerimage = $item['sellerimage'];
+  $Address = $item['address'];
+  $Valid = $item['valid'];
+  $Email = $item['email'];
+  $Gender = $item['gender'];
 //  $GroupName = '&nbsp;';
 //  if (isset($GroupNames[$GroupID])) $GroupName = $GroupNames[$GroupID];
   $DspMsg = "'確定刪除項目?'";
-  $PassArg = "'contactmgm.php?action=delete&id=$id'";
+  $PassArg = "'contactmgm.php?action=delete&cid=$cid'";
   echo '<tr align="center"><td>';
   if ($Valid=='N') {
 ?>
-  <a href="contactmgm.php?action=recover&cid=<?php echo $id; ?>">
+  <a href="contactmgm.php?action=recover&cid=<?php echo $cid; ?>">
     <img src="../images/recover.gif" border="0" align="absmiddle">
     </a></td>
   <td><STRIKE><?php echo $Name ?></STRIKE></td>
@@ -140,10 +158,12 @@ foreach ($Contacts AS $item) {
   </td>
   <td><?php echo $Name ?></td>   
 <?php } ?>
-  <td><?php echo $Price ?></td>  
-  <td><?php echo $Amount ?></td>
-  <td><?php echo $ITimage ?></td>  
-  <td><?php echo $Name ?></td>  
+  <td><?php echo $cid ?></td>
+  <td><?php echo $Sellerimage ?></td>
+  <td><?php echo $Phone ?></td>  
+  <td><?php echo $Address ?></td>   
+  <td><?php echo $Gender ?></td> 
+  <td><?php echo $Email ?></td>     
   </tr>
 <?php
 }
