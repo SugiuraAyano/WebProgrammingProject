@@ -12,6 +12,7 @@ if (isset($_SERVER['HTTP_VIA']) && isset($_SERVER['HTTP_X_FORWARDED_FOR']))
 else if (isset($_SERVER['REMOTE_ADDR'])) $UserIP = $_SERVER['REMOTE_ADDR'];
 ?>
 <?php
+session_start();
 // Authentication 認證
 require_once("../include/auth.php");
 // session_start();
@@ -19,7 +20,8 @@ require_once("../include/auth.php");
 require_once("../include/gpsvars.php");
 require_once("../include/db_func.php");
 $db_conn = connect2db($dbhost, $dbuser, $dbpwd, $dbname);
-
+$pid = $_SESSION['id'];
+$uid = $_SESSION['id'];
 /* $sqlcmd = "SELECT * FROM user WHERE loginid='$LoginID' AND valid='Y'";
 $rs = querydb($sqlcmd, $db_conn);
 if (count($rs) <= 0) die ('Unknown or invalid user!');
@@ -35,8 +37,11 @@ $UserGroupID = $rs[0]['groupid']; */
 // foreach ($rs as $item) {
     // $ID = $item['groupid'];
     // $GroupNames[$ID] = $item['groupname'];
-// } 
-
+// }
+$sqlcmd = "SELECT image FROM User WHERE id = '$uid'";
+$rs = querydb($sqlcmd, $db_conn);
+if($rs<=0)
+	$pid = "default";
 if (isset($action) && $action=='recover' && isset($cid)) {
     // Recover this item
     // Check whether this user have the right to modify this contact info
@@ -104,14 +109,14 @@ var name = confirm(DspMsg)
 <table class="mistab" width="20%" align="left">
 <?php
 $id=1;
-$sqlcmd = "SELECT name FROM User WHERE id = 'default'";
+$sqlcmd = "SELECT name FROM User WHERE id = '$uid'";
 $rs = querydb($sqlcmd,$db_conn);
 foreach($rs AS $it){
 $Uname = $it['name'];
 }
 ?>
 <tr>
-<td><img src="getimage(U).php?ID=<?php echo "default" ?>" border="0" width="300"></td>
+<td><img src="getimage(U).php?ID=<?php echo $pid ?>" border="0" width="300"></td>
 </tr>
 <td><?php echo $Uname?></td>
 </table>
