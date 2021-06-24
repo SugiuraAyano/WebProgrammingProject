@@ -96,14 +96,12 @@ $Contacts = querydb($sqlcmd, $db_conn);
 <body>
 <div>
 <Script Language="JavaScript">
-<!--
 function confirmation(DspMsg, PassArg) {
 var name = confirm(DspMsg)
     if (name == true) {
       location=PassArg;
     }
 }
--->
 </SCRIPT>
 <div id="logo">賣家</div>
 <table class="mistab" width="20%" align="left">
