@@ -22,8 +22,8 @@ require_once("../include/gpsvars.php");
 require_once("../include/db_func.php");
 $db_conn = connect2db($dbhost, $dbuser, $dbpwd, $dbname);
 ?>
-<Script Language="JavaScript">
-<!--
+<script Language="JavaScript">
+
 function startload() {
     var Ary = document.ULFile.userfile.value.split('\\');
     document.ULFile.fname.value=Ary[Ary.length-1];
@@ -31,8 +31,8 @@ function startload() {
     document.forms['ULFile'].submit();
     return true;
 }
--->
-</SCRIPT>
+
+</script>
 <?php
 /* $sqlcmd = "SELECT * FROM user WHERE loginid='$LoginID' AND valid='Y'";
 $rs = querydb($sqlcmd, $db_conn);

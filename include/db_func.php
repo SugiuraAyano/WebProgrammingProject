@@ -15,12 +15,14 @@ function connect2db($dbhost, $dbuser, $dbpwd, $dbname) {
 	}
     try {
         $db_conn = new PDO($dsn, $dbuser, $dbpwd);
+        $db_conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
     catch (PDOException $e) {
         echo $e->getMessage();
         die ("錯誤: 無法連接到資料庫");
     }
     $db_conn->query("SET NAMES UTF8");
+    $db_conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     return $db_conn;
 }
 
