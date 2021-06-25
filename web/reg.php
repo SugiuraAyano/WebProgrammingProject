@@ -109,6 +109,7 @@ if (isset($Confirm)) {   // 確認按鈕
         */
 		$_SESSION['id'] = $id;
 		header("Location: upload.php");
+		exit();
 	}
 }
 $PageTitle = '示範新增人員資料';

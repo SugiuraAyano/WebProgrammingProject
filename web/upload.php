@@ -83,8 +83,5 @@ if (isset($GoUpload) && $GoUpload == '1') {
 ?>
 <br /> <br />
 <div align="center">原存影像<br /><br />
-    <img src="getimage.php?ID=<?php echo $id ?>" border="0" width="320">
+    <img src="getuserimage.php?ID=<?php echo $id ?>" border="0" width="320">
 </div>
-<?php
-// require_once("../include/footer.php");
-?>

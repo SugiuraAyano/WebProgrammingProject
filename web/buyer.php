@@ -10,10 +10,11 @@ require_once("../include/db_func.php");
 $db_conn = connect2db($dbhost, $dbuser, $dbpwd, $dbname);
 $pid = $_SESSION['id'];
 $uid = $_SESSION['id'];
-$sqlcmd = "SELECT itemimage FROM Item WHERE id = '$uid'";
+$Rad1 = "";
+$sqlcmd = "SELECT image FROM User WHERE id = '$uid'";
 $rs = querydb($sqlcmd, $db_conn);
-if ($rs <= 0)
-    $pid = "default";
+if ($rs[0]['image'] == NULL)
+	$pid = "default";
 if (isset($action) && $action == 'recover' && isset($cid)) {
     // Recover this item
     // Check whether this user have the right to modify this contact info
@@ -142,8 +143,12 @@ $Contacts = querydb($sqlcmd, $db_conn);
                 <td><?php echo $Amount ?></td>
                 <td><?php echo $Price ?></td>
                 <td>
-                    <form method="POST" action="cart.php">
-                        <input type="text" name="Rad1" value="<?php echo $Rad1; ?>">
+                    <form method="POST" action="addtocart.php">
+                        <input type="hidden" name="cid" value="<?php echo $cid?>">
+                        <input type="hidden" name="Name" value="<?php echo $Name?>">
+                        <input type="hidden" name="buyerID" value="<?php echo $_SESSION['id']?>">
+                        <input type="hidden" name="price" value="<?php echo $Price?>">
+                        <input type="number" name="Rad1" value="<?php echo $Rad1; ?>">
                         <input type="submit" value="加入購物車">   
                     </form>
                 </td>
@@ -170,6 +175,7 @@ $Contacts = querydb($sqlcmd, $db_conn);
                         <?php } ?>
                     <td>
 					<td align="right" width="30%">
+                        <a href="cart.php">購物車</a>
 						<a href="logout.php">登出</a>
 					</td>
 

@@ -88,6 +88,7 @@ if (isset($GoUpload) && $GoUpload == '1') {   // 確認按鈕
 		$_SESSION['CurPage'] = $TotalPage;
 
 		header("Location: seller.php");
+		exit();
 	}
 	else echo $ErrMsg;
 }

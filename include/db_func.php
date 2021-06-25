@@ -58,10 +58,6 @@ function GetInsertID($db) {
     return $db->lastInsertId();;
 }
 
-function xssfix($InString) {
-    return htmlspecialchars($InString);
-}
-
 function codeconv($in_value) {
    return iconv('BIG-5', 'UTF-8', $in_value);
 }

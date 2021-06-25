@@ -1,22 +1,12 @@
 <?php
 // Authentication 認證
 
-//require_once("../include/auth.php");
+require_once("../include/auth.php");
 // session_start();
 // 變數及函式處理，請注意其順序
 require_once("../include/gpsvars.php");
 //require_once("../include/configure.php");
-$dbhost = "sugiuraayano.synology.me:13307";
-$dbname = "project";
-$dbuser = "ui3a22";
-$dbpwd = "ui3a22";
-$uDate = date("Y-m-d H:i:s");
-$ErrMsg = "";
-$UserIP = '';
-if (isset($_SERVER['HTTP_VIA']) && isset($_SERVER['HTTP_X_FORWARDED_FOR']))
-    $UserIP = $_SERVER['HTTP_X_FORWARDED_FOR'];
-else if (isset($_SERVER['REMOTE_ADDR'])) $UserIP = $_SERVER['REMOTE_ADDR'];
-///////////////////////
+require_once("../include/config.php");
 require_once("../include/db_func.php");
 $db_conn = connect2db($dbhost, $dbuser, $dbpwd, $dbname);
 
@@ -28,8 +18,6 @@ if (isset($action) && $action == 'delete' && isset($cid)) {
 		$result = updatedb($sqlcmd, $db_conn);
 	}
 }
-
-$CartPerPage = 5;
 $sqlcmd = "SELECT count(*) AS reccount FROM Cart ";
 $rs = querydb($sqlcmd, $db_conn);
 $RecCount = $rs[0]['reccount'];
@@ -42,8 +30,9 @@ if (!isset($Page)) {
 if ($Page > $TotalPage) $Page = $TotalPage;
 if (!isset($Page) || $Page < 1) $Page = 1;
 $_SESSION['CurPage'] = $Page;
+$curUser = $_SESSION['buyer_id'];
 $StartRec = ($Page - 1) * $CartPerPage;
-$sqlcmd = "SELECT * FROM Cart LIMIT $StartRec,$CartPerPage";
+$sqlcmd = "SELECT * FROM Cart WHERE buyer_id='$curUser' LIMIT $StartRec,$CartPerPage";
 
 $Contacts = querydb($sqlcmd, $db_conn);
 ?>
@@ -54,13 +43,13 @@ $Contacts = querydb($sqlcmd, $db_conn);
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<link rel="icon" type="image/x-icon" href="favicon.ico">
 	<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-	<link rel="stylesheet" href="assets/css/main.css" />
+	<link rel="stylesheet" href="../assets/css/main.css" />
 
 	<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 </head>
 
 <body id="top">
-	
+
 	<!-- Header -->
 	<header id="header">
 
@@ -76,26 +65,20 @@ $Contacts = querydb($sqlcmd, $db_conn);
 			</header>
 			<p></p>
 			<ul class="actions">
-
-				<li><a href="https://stucis.ttu.edu.tw/stucis.htm" target="_blank" class="button">返回首頁</a></li>
+				<li><a href="index.php" target="_blank" class="button">返回首頁</a></li>
 			</ul>
 		</section>
 		<section>
 			<div class="table-wrapper">
 
-				<Script Language="JavaScript">
-					<!--
 
 				<script Language="JavaScript">
-
 					function confirmation(DspMsg, PassArg) {
 						var name = confirm(DspMsg)
 						if (name == true) {
 							location = PassArg;
 						}
 					}
-
-					-->
 				</Script>
 
 				<table class="alt">
@@ -113,15 +96,15 @@ $Contacts = querydb($sqlcmd, $db_conn);
 							$Name = $Item['name'];
 							$Amount = $Item['buyamount'];
 							$Price = $Item['price'];
-							
+
 							$DspMsg = "'確定刪除項目?'";
 							$PassArg = "'index.php?action=delete&cid=$cid'";
 							echo '<tr align="center"><td>';
 						?>
 							<a href="javascript:confirmation(<?php echo $DspMsg ?>, <?php echo $PassArg ?>)">
-							<img src="/images/cut.gif" border="0" align="absmiddle" alt="按此鈕將本項目作廢"></a>&nbsp;
+								<img src="/images/cut.gif" border="0" align="absmiddle" alt="按此鈕將本項目作廢"></a>&nbsp;
 							<a href="contactmod.php?cid=<?php echo $cid; ?>">
-							<img src="/images/edit.gif" border="0" align="absmiddle" alt="按此鈕修改本項目"></a>&nbsp;
+								<img src="/images/edit.gif" border="0" align="absmiddle" alt="按此鈕修改本項目"></a>&nbsp;
 							</td>
 							<td><?php echo $cid ?></td>
 							<td><?php echo $Name ?></td>
@@ -135,6 +118,11 @@ $Contacts = querydb($sqlcmd, $db_conn);
 					</tbody>
 				</table>
 			</div>
+			<form action="updatedb.php" method="POST">
+				<input type="hidden" name='cid'value="<?php echo $cid?>">
+				<input type="hidden" name='buyAmount'value="<?php echo $Amount?>">
+				<input type="submit" value="送出">
+			</form>
 		</section>
 		<!-- Two -->
 		<section id="two">
@@ -153,7 +141,6 @@ $Contacts = querydb($sqlcmd, $db_conn);
 					<ul class="labeled-icons">
 						<li>
 							<h3 class="icon fa-home"><span class="label">Address</span></h3>
-
 							104台北市中山區中山北路三段40號1樓
 						</li>
 						<li>
@@ -162,8 +149,7 @@ $Contacts = querydb($sqlcmd, $db_conn);
 						</li>
 						<li>
 							<h3 class="icon fa-envelope-o"><span class="label">Email</span></h3>
-							<a href="mailto:test@ms.ttu.edu.tw">test9527@ms.ttu.edu.tw</a>
-
+							<a href="mailto:test@ms.ttu.edu.tw">test9527@ms.ttu.edu.tw</a> <br>
 							大同大學
 						</li>
 						<li>
@@ -186,14 +172,14 @@ $Contacts = querydb($sqlcmd, $db_conn);
 	<footer id="footer">
 		<ul class="copyright">
 
-		<ul class="icons">
-			<li><a href="mailto:tkchou@mail.ncku.edu.tw" class="icon fa-envelope-o"><span class="label">Email</span></a></li>
-		</ul>
-		<ul class="copyright">
-			<li>&copy; leem wlm fht</li>
+			<ul class="icons">
+				<li><a href="mailto:tkchou@mail.ncku.edu.tw" class="icon fa-envelope-o"><span class="label">Email</span></a></li>
+			</ul>
+			<ul class="copyright">
+				<li>&copy; leem wlm fht</li>
 
-			<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-		</ul>
+				<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+			</ul>
 	</footer>
 
 </body>
