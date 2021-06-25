@@ -96,7 +96,6 @@ $Contacts = querydb($sqlcmd, $db_conn);
         </table>
         <table class="mistab" width="60%" align="center">
             <tr>
-                <th width="5%">處理</th>
                 <th width="5%">序號</a></th>
                 <th width="20%">圖片</a></th>
                 <th width="15%">商品名</th>
@@ -121,21 +120,7 @@ $Contacts = querydb($sqlcmd, $db_conn);
                 //  if (isset($GroupNames[$GroupID])) $GroupName = $GroupNames[$GroupID];
                 $DspMsg = "'確定刪除項目?'";
                 $PassArg = "'seller.php?action=delete&cid=$cid'";
-                echo '<tr align="center"><td>';
-                if ($Valid == 'N') {
-            ?>
-                    <a href="seller.php?action=recover&id=<?php echo $cid; ?>">
-                        <img src="../images/recover.gif" border="0" align="absmiddle">
-                    </a></td>
-                    <td><STRIKE><?php echo $Name ?></STRIKE></td>
-                <?php } else { ?>
-                    <a href="javascript:confirmation(<?php echo $DspMsg ?>, <?php echo $PassArg ?>)">
-                        <img src="../images/cut.gif" border="0" align="absmiddle" alt="按此鈕將本項目作廢"></a>&nbsp;
-                    <a href="contactmod.php?cid=<?php echo $cid; ?>">
-                        <img src="../images/edit.gif" border="0" align="absmiddle" alt="按此鈕修改本項目"></a>&nbsp;
-                    </td>
-                    <td><?php echo $cid ?></td>
-                <?php } ?>
+                echo '<tr align="center"><td>';?>
                 <td><img src="getitemimage.php?ID=<?php echo $cid ?>" border="0" width="320"></td>
                 <td><?php echo $Name ?></td>
                 <td><?php echo $Description ?></td>
