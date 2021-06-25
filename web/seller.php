@@ -77,7 +77,7 @@ if ($Page > $TotalPage) $Page = $TotalPage;
 if (!isset($Page) || $Page < 1) $Page = 1;
 $_SESSION['CurPage'] = $Page;
 $StartRec = ($Page - 1) * $ItemPerPage;
-$sqlcmd = "SELECT * FROM Item "
+$sqlcmd = "SELECT * FROM Item WHERE seller_id = '$uid'"
 	. "LIMIT $StartRec,$ItemPerPage";
 $Contacts = querydb($sqlcmd, $db_conn);
 ?>
