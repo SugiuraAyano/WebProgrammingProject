@@ -120,7 +120,8 @@ $Contacts = querydb($sqlcmd, $db_conn);
                 //  if (isset($GroupNames[$GroupID])) $GroupName = $GroupNames[$GroupID];
                 $DspMsg = "'確定刪除項目?'";
                 $PassArg = "'seller.php?action=delete&cid=$cid'";
-                echo '<tr align="center"><td>';?>
+                echo '<tr align="center">';?>
+                <td><?php echo $cid?></td>
                 <td><img src="getitemimage.php?ID=<?php echo $cid ?>" border="0" width="320"></td>
                 <td><?php echo $Name ?></td>
                 <td><?php echo $Description ?></td>
