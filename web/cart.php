@@ -1,6 +1,6 @@
 <?php
 // Authentication 認證
-//require_once("../include/auth.php");
+require_once("../include/auth.php");
 // session_start();
 // 變數及函式處理，請注意其順序
 require_once("../include/gpsvars.php");
@@ -33,7 +33,6 @@ if (isset($action) && $action == 'delete' && isset($id)) {
 	}
 }
 */
-$ItemPerPage = 5;
 $sqlcmd = "SELECT count(*) AS reccount FROM Item ";
 $rs = querydb($sqlcmd, $db_conn);
 $RecCount = $rs[0]['reccount'];
@@ -54,9 +53,9 @@ $Contacts = querydb($sqlcmd, $db_conn);
 	<title>購物車</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<link rel="icon" type="image/x-icon" href="favicon.ico">
+	<link rel="icon" type="image/x-icon" href="../images/favicon.ico">
 	<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-	<link rel="stylesheet" href="assets/css/main.css" />
+	<link rel="stylesheet" href="../assets/css/main.css" />
 	<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 </head>
 
@@ -103,7 +102,7 @@ $Contacts = querydb($sqlcmd, $db_conn);
 						foreach ($Contacts as $item) {
 							$id = $item['id'];
 							$Name = $item['name'];
-							$Amount = $item['amount'];
+							$Amount = $Rad1;
 							$Price = $item['price'];
 							$Valid = 'N';
 							

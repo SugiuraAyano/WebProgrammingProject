@@ -1,24 +1,22 @@
 <?php
+session_start();
 function userauth($ID, $PWD, $db_conn)
 {
     $sqlcmd = "SELECT * FROM User WHERE id='$ID' AND valid='Y'";
     $rs = querydb($sqlcmd, $db_conn);
     $retcode = 0;
     if (count($rs) > 0) {
-        //$Password = sha1($PWD);
+        $PWD = sha1($PWD);
         if ($PWD == $rs[0]['password']) $retcode = 1;
+        $_SESSION['id'] = $rs[0]['id'];
     }
     //echo $Password;
     return $retcode;
 }
-session_start();
 //session_unset();
 require_once("../include/gpsvars.php");
 
-
-
 $ErrMsg = "";
-
 if (!isset($ID)) $ID = "";
 
 /*
@@ -33,20 +31,13 @@ if(isset($Submit)&& isset($vCode)){
 
 if (isset($Submit)) {
     //require ("include/configure.php");
-    $dbhost = "sugiuraayano.synology.me:13307";
-    $dbname = "project";
-    $dbuser = "NOBUNOBU";
-    $dbpwd = "Ultimate8763";
-    $uDate = date("Y-m-d H:i:s");
-    $ErrMsg = "";
-    $UserIP = '';
 
     /*
     if (isset($_SERVER['HTTP_VIA']) && isset($_SERVER['HTTP_X_FORWARDED_FOR'])) 
         $UserIP = $_SERVER['HTTP_X_FORWARDED_FOR'];
     else if (isset($_SERVER['REMOTE_ADDR'])) $UserIP = $_SERVER['REMOTE_ADDR'];
     */
-
+    require_once("../include/config.php");
     require_once("../include/db_func.php");
     $db_conn = connect2db($dbhost, $dbuser, $dbpwd, $dbname);
     if (strlen($ID) > 0 && strlen($ID) <= 16 && $ID == addslashes($ID)) {
@@ -94,67 +85,7 @@ if (isset($Submit)) {
     <meta HTTP-EQUIV="Expires" CONTENT="Tue, 01 Jan 1980 1:00:00 GMT">
     <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
     <title>登錄系統</title>
-    <style type="text/css">
-        <!--
-        body {
-            font-family: 新細明體, arial;
-            font-size: 12pt;
-            color: #000000
-        }
-
-        pre,
-        tt {
-            font-size: 12pt
-        }
-
-        th {
-            font-family: 新細明體, arial;
-            font-size: 12pt;
-            font-weight: bold;
-            background-color: #F0E68C
-        }
-
-        td {
-            font-family: 新細明體, arial;
-            font-size: 12pt;
-        }
-
-        form {
-            font-family: 新細明體, arial;
-            font-size: 12pt;
-        }
-
-        input {
-            font-family: 新細明體, arial;
-            font-size: 12pt;
-            color: #000000
-        }
-
-        input.pwdtext {
-            font-family: helvetica, sans-serif;
-        }
-
-        a:active {
-            color: #FF0000;
-            text-decoration: none
-        }
-
-        a:link {
-            color: #0000FF;
-            text-decoration: none
-        }
-
-        a:visited {
-            color: #0000FF;
-            text-decoration: none
-        }
-
-        a:hover {
-            color: #FF0000;
-            text-decoration: none
-        }
-
-    </style>
+	<link rel="stylesheet" href="../assets/css/main.css" />
 </HEAD>
 <script type="text/javascript">
     function setFocus() {
@@ -215,7 +146,7 @@ if (isset($Submit)) {
 
                                 <tr bgcolor="#FFCC33" height="35">
                                     <td align="center">
-                                        <input type="button" name="Submit" value="加入會員" onclick="location.href='add.php'" />
+                                        <input type="button" name="Submit" value="加入會員" onclick="location.href='reg.php'" />
                                     </td>
                                 </tr>
 

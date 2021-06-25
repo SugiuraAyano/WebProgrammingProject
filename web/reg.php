@@ -2,9 +2,11 @@
 // 使用者點選放棄新增按鈕
 if (isset($_POST['Abort'])) header("Location: login.php");
 // Authentication 認證
-//require_once("../include/auth.php");
+
 // 變數及函式處理，請注意其順序
 require_once("../include/gpsvars.php");
+require_once("../include/xss.php");
+require_once("../include/config.php");
 //require_once("../include/configure.php");
 session_start();
 /* 
@@ -26,6 +28,8 @@ if (!isset($Phone)) $Phone = '';
 if (!isset($Address)) $Address = '';
 if (!isset($id)) $id = '';
 if (!isset($password)) $password = '';
+if (!isset($eMail)) $eMail = '';
+if (!isset($gender)) $gender = '';
 // 取出群組資料
 
 //echo $LoginID;
@@ -74,20 +78,28 @@ if (isset($Confirm)) {   // 確認按鈕
 		// 若權限表未設定權限，則設為用戶的群組
 		//if (count($rs) <= 0) $GroupID = $UserGroupID;
 
-		$Name = htmlpurifier($Name);
-		$Address = htmlpurifier($Address);
-		$id = htmlpurifier($id);
-		$password = htmlpurifier($password);
+		$Name = xsspurify($Name);
+		$Address = xsspurify($Address);
+		$id = xsspurify($id);
+		$password = xsspurify($password);
+
+		$password = sha1($password);
 
 		require_once("../include/db_func.php");
 		$db_conn = connect2db($dbhost, $dbuser, $dbpwd, $dbname);
 		$sqlcmd = 'INSERT INTO User (id,name,gender,phone,email,address,password) VALUES ('
 			. ":id,:Name,:gender,:Phone,:eMail,:Address,:password)";
 		$statment = $db_conn->prepare($sqlcmd);
-		$statment->execute(array(
-			':id' => $id, ':Name' => $Name, ':gender' => $gender, ':Phone' => $Phone, ':eMail' => $eMail, ':Address' => $Address, ':password' => $password
-		));
-		$result = $statment->fetchAll(PDO::FETCH_ASSOC);
+		try {
+			$statment->execute(array(
+				':id' => $id, ':Name' => $Name, ':gender' => $gender, ':Phone' => $Phone, ':eMail' => $eMail, ':Address' => $Address, ':password' => $password
+			));
+			$result = $statment->fetchAll();
+		}
+		catch (PDOException $e) {
+			$e->getMessage();
+		}
+		
 		/*
         $sqlcmd = "SELECT count(*) AS reccount FROM namelist WHERE groupid IN $GroupIDs ";
         $rs = querydb($sqlcmd, $db_conn);
@@ -100,8 +112,10 @@ if (isset($Confirm)) {   // 確認按鈕
 	}
 }
 $PageTitle = '示範新增人員資料';
-require_once("../include/header.php");
+// require_once("../include/header.php");
 ?>
+
+
 <div align="center">
 	<form action="" method="post" name="inputform">
 		<b>新增人員資料</b>
@@ -136,7 +150,7 @@ require_once("../include/header.php");
 			</tr>
 			<tr height="30">
 				<th width="40%">密碼</th>
-				<td><input type="text" name="password" value="<?php echo $password ?>" maxlength="20" size="20"></td>
+				<td><input type="password" name="password" value="<?php echo $password ?>" maxlength="20" size="20"></td>
 			</tr>
 
 			<?php
@@ -176,5 +190,5 @@ require_once("../include/header.php");
 	</form>
 </div>
 <?php
-require_once('../include/footer.php');
+// require_once('../include/footer.php');
 ?>

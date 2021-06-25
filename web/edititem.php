@@ -2,7 +2,7 @@
 // 使用者點選放棄修改按鈕
 if (isset($_POST['Abort'])) header("Location: seller.php");
 // Authentication 認證
-/* require_once("../include/auth.php"); */
+require_once("../include/auth.php");
 // 變數及函式處理，請注意其順序
 require_once("../include/gpsvars.php");
 require_once("../include/db_func.php");
@@ -94,8 +94,12 @@ foreach ($rs as $item) {
     $GroupNames[$ID] = $item['groupname'];
 } */
 $PageTitle = '示範修改人員資料';
-require_once("../include/header.php");
 ?>
+
+<head>
+	<link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+
 <div align="center">
     <form enctype="multipart/form-data" action="" method="post" name="ULFile">
         <b>修改商品資料</b>
@@ -139,6 +143,3 @@ require_once("../include/header.php");
             <input type="submit" name="Abort" value="放棄新增">
     </form>
 </div>
-<?php
-require_once('../include/footer.php');
-?>

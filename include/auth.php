@@ -1,7 +1,7 @@
 <?php
 session_start();
-if (!isset($_SESSION["LoginID"])||empty($_SESSION['LoginID'])) {
-    header("Location: ../timeout.php");
+if (!isset($_SESSION["id"])||empty($_SESSION['id'])) {
+    header("Location: ../web/timeout.php");
     exit();
 }
 ?>

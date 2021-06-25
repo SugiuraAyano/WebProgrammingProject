@@ -4,12 +4,12 @@ if (isset($_POST['Abort'])) {
     exit();
 }
 // Authentication 認證
-// require_once("../include/auth.php");
+require_once("../include/auth.php");
 // 變數及函式處理，請注意其順序
 require_once("../include/gpsvars.php");
 require_once("../include/config.php");
-
 require_once("../include/db_func.php");
+
 $db_conn = connect2db($dbhost, $dbuser, $dbpwd, $dbname);
 ?>
 
@@ -44,9 +44,13 @@ if (isset($GoUpload) && $GoUpload == '1') {
             . '檔案不存在、大小為0或超過上限(100MBytes)</font>';
     }
 }
-require_once("../include/header.php");
+// require_once("../include/header.php");
 ?>
 <br />
+<head>
+	<link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+
 <form enctype="multipart/form-data" method="post" action="" name="ULFile">
     <table width="420" align="center" border="0" cellspacing="0" cellpadding="0">
         <tr>
@@ -82,5 +86,5 @@ require_once("../include/header.php");
     <img src="getimage.php?ID=<?php echo $id ?>" border="0" width="320">
 </div>
 <?php
-require_once("../include/footer.php");
+// require_once("../include/footer.php");
 ?>
