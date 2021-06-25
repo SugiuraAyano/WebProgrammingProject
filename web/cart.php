@@ -98,7 +98,7 @@ $Contacts = querydb($sqlcmd, $db_conn);
 							$Price = $Item['price'];
 
 							$DspMsg = "'確定刪除項目?'";
-							$PassArg = "'index.php?action=delete&cid=$cid'";
+							$PassArg = "'updatedb.php?action=delete&cid=$cid'";
 							echo '<tr align="center"><td>';
 						?>
 							<a href="javascript:confirmation(<?php echo $DspMsg ?>, <?php echo $PassArg ?>)">
@@ -121,6 +121,7 @@ $Contacts = querydb($sqlcmd, $db_conn);
 			<form action="updatedb.php" method="POST">
 				<input type="hidden" name='cid'value="<?php echo $cid?>">
 				<input type="hidden" name='buyAmount'value="<?php echo $Amount?>">
+				<input type="hidden" name='buyer_id'value="<?php echo $curUser?>">
 				<input type="submit" value="送出">
 			</form>
 		</section>
