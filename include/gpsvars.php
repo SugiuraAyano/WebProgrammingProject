@@ -14,8 +14,6 @@ if (isset($_POST) && !empty($_POST)) {
 if (isset($_SESSION) && !empty($_SESSION)) {
     extract($_SESSION, EXTR_OVERWRITE);
 }
-if (isset($_SERVER['HTTP_VIA']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']))
-	$UserIP = $_SERVER['HTTP_X_FORWARDED_FOR'];
-else $UserIP = $_SERVER['REMOTE_ADDR'];
+
 
 ?>

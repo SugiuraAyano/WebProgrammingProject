@@ -1,17 +1,4 @@
 <?php
-$SystemName = '網頁程式設計與安全實務';
-$dbhost = "sugiuraayano.synology.me:13307";
-$dbname = "project";
-$dbuser = "ui3a19";
-$dbpwd = "qaq890204";
-$uDate = date("Y-m-d H:i:s");
-$ErrMsg = "";
-$UserIP = '';
-if (isset($_SERVER['HTTP_VIA']) && isset($_SERVER['HTTP_X_FORWARDED_FOR'])) 
-    $UserIP = $_SERVER['HTTP_X_FORWARDED_FOR'];
-else if (isset($_SERVER['REMOTE_ADDR'])) $UserIP = $_SERVER['REMOTE_ADDR'];
-?>
-<?php
 // 使用者點選放棄新增按鈕
 if (isset($_POST['Abort'])) header("Location: seller.php");
 // Authentication 認證
@@ -20,6 +7,7 @@ require_once("../include/auth.php");
 require_once("../include/gpsvars.php");
 
 require_once("../include/db_func.php");
+require_once("../include/config.php");
 $db_conn = connect2db($dbhost, $dbuser, $dbpwd, $dbname);
 ?>
 <script Language="JavaScript">
