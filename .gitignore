@@ -3,6 +3,7 @@
 /include/config.php
 /vendor/*
 /config/app.php
+/.vscode/*
 
 /tmp/cache/models/*
 !/tmp/cache/models/empty
